@@ -27,15 +27,15 @@ papa=can_jeu.create_image(570,520,image=pere_noel)
 can_jeu.config(highlightthickness=0)
 
 
-def déplacement (event):
-    if (can_jeu.coords(pere_noel)[3]<1100 or can_jeu.coords(pere_noel)[1]<0) :
-
+def droite (event):
+    if can_jeu.coords(papa)[0] < 1100  :
         can_jeu.move(papa, 10 , 0 )
 
 can_jeu.bind_all('<Right>', droite)
 
 def gauche (event):
     can_jeu.move(papa, -10 , 0 )
+    print(can_jeu.coords(papa))
 can_jeu.bind_all('<Left>', gauche)
 
 Application.title("Space Invaders")
