@@ -27,20 +27,49 @@ papa=can_jeu.create_image(570,520,image=pere_noel)
 can_jeu.config(highlightthickness=0)
 
 
-def déplacement (event):
-    if (can_jeu.coords(pere_noel)[3]<1100 or can_jeu.coords(pere_noel)[1]<0) :
-
-        can_jeu.move(papa, 10 , 0 )
+def droite (event):
+    if can_jeu.coords(papa)[0]<1050 :
+        can_jeu.move(papa, 20 , 0 )
 
 can_jeu.bind_all('<Right>', droite)
 
 def gauche (event):
-    can_jeu.move(papa, -10 , 0 )
+    if can_jeu.coords(papa)[0]>50 :
+        can_jeu.move(papa, -20 , 0 )
 can_jeu.bind_all('<Left>', gauche)
+
+lutin=tk.PhotoImage(file ="lutin.png")
+elfe=can_jeu.create_image(500,100,image=lutin)
+can_jeu.config(highlightthickness=0)
+
+x=10
+
+def deplacement_lutin() : 
+    global x
+    dx = can_jeu.coords(elfe)[0]
+    dy = can_jeu.coords(elfe)[1]
+    if dx < 1050 and dx > 50 :
+        can_jeu.move(elfe, x , 0 )
+    else :
+        x=-1*x
+        can_jeu.move(elfe, x , 0 )
+    Application.after(80,deplacement_lutin)
+
+deplacement_lutin()
+
+cadeau=tk.PhotoImage(file ="cadeau.png")
+
+def tire(event):
+    gift=can_jeu.create_image(can_jeu.coords(papa)[0],430,image=cadeau)
+    can_jeu.config(highlightthickness=0)
+can_jeu.bind_all('<space>', tire)
+
+
 
 Application.title("Space Invaders")
 Application.geometry("1400x900")
 Application.configure(bg='green')
+
 
 
 
