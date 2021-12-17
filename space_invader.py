@@ -6,6 +6,7 @@ from random import randint as rd
 Application = tk.Tk()
 
 can_jeu=tk.Canvas(bg='brown', width=906, height=650)
+can_jeu.place(x=10,y=12)
 
 
 
