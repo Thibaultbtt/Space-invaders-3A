@@ -28,14 +28,14 @@ can_jeu.config(highlightthickness=0)
 
 
 def droite (event):
-    if can_jeu.coords(papa)[0]<1050 :
-        can_jeu.move(papa, 20 , 0 )
+   if can_jeu.coords(papa)[0]<1050 :
+       can_jeu.move(papa, 20 , 0 )
 
 can_jeu.bind_all('<Right>', droite)
 
 def gauche (event):
-    if can_jeu.coords(papa)[0]>50 :
-        can_jeu.move(papa, -20 , 0 )
+   if can_jeu.coords(papa)[0]>50 :
+       can_jeu.move(papa, -20 , 0 )
 can_jeu.bind_all('<Left>', gauche)
 
 lutin=tk.PhotoImage(file ="lutin.png")
@@ -44,24 +44,37 @@ can_jeu.config(highlightthickness=0)
 
 x=10
 
-def deplacement_lutin() : 
-    global x
-    dx = can_jeu.coords(elfe)[0]
-    dy = can_jeu.coords(elfe)[1]
-    if dx < 1050 and dx > 50 :
-        can_jeu.move(elfe, x , 0 )
-    else :
-        x=-1*x
-        can_jeu.move(elfe, x , 0 )
-    Application.after(80,deplacement_lutin)
+def deplacement_lutin() :
+   global x
+   dx = can_jeu.coords(elfe)[0]
+   if dx < 1050 and dx > 50 :
+       can_jeu.move(elfe, x , 0 )
+   else :
+       x=-1*x
+       can_jeu.move(elfe, x , 0 )
+   Application.after(80,deplacement_lutin)
 
 deplacement_lutin()
 
 cadeau=tk.PhotoImage(file ="cadeau.png")
 
 def tire(event):
-    gift=can_jeu.create_image(can_jeu.coords(papa)[0],430,image=cadeau)
-    can_jeu.config(highlightthickness=0)
+   abscisse = can_jeu.coords(papa)[0]
+   ordonee = 430
+   gift=can_jeu.create_image(abscisse,ordonee,image=cadeau)
+   deplacement_cadeau (gift)
+
+def deplacement_cadeau (gift) :
+   can_jeu.move(gift, 0 , -10 )
+   if can_jeu.coords(gift)[1] <= 25 :
+       can_jeu.delete(gift)
+       return
+   if can_jeu.coords(gift)[0] == can_jeu.coords(elfe)[0] and can_jeu.coords(gift)[1] == can_jeu.coords(elfe)[1] :
+       can_jeu.delete(gift)
+       can_jeu.delete(elfe)
+       return
+   Application.after(80,lambda : deplacement_cadeau(gift))
+
 can_jeu.bind_all('<space>', tire)
 
 
