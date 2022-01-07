@@ -16,6 +16,9 @@ bouton_quit.place(x=1200, y=730)
 OptionList = ["sucre d'orge", "boule de neige"]
 variable = tk.StringVar(Application)
 variable.set(OptionList[0])
+vie = []
+label_vie = tk.Label(text ="Vies restantes : " + str(len(vie)) ,font=("Helvetica", 30),bg = "green")
+label_vie.place(x=50, y=50)
 
 opt_menu = tk.OptionMenu(Application, variable, *OptionList)
 opt_menu.config(width = 11, font = ('Helvetica', 20), bg="green")
@@ -43,6 +46,7 @@ flocon=tk.PhotoImage(file ="flocon.png")
 x=6
 
 def chute_flocon ():
+   global vie
    if liste_elfes == [] :
           return
    lutin_random = rd.choice(liste_elfes)
@@ -55,6 +59,14 @@ def chute_flocon ():
 def deplacement_flocon (neige) :
    can_jeu.move(neige, 0 , 10 )
    Application.after(70,lambda : deplacement_flocon(neige))
+   coordonnees = can_jeu.coords(papa)
+   if coordonnees[0]-40 < can_jeu.coords(neige)[0] < coordonnees[0]+40 and coordonnees[1]-40 < can_jeu.coords(neige)[1] < coordonnees[1]+40 :
+       can_jeu.delete(neige)
+       print('Vous avez perdu une vie!!!!')
+       vie.append(1)
+       label_vie.config(text = "Vies restantes : " + str(len(vie)))
+   if len(vie) == 3 :
+       print ("Vous avez perdu !!")
 
 liste_elfes = []
 abscisse = 60
