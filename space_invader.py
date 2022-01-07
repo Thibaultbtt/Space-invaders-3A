@@ -46,12 +46,11 @@ flocon=tk.PhotoImage(file ="flocon.png")
 x=6
 
 def chute_flocon ():
-   global vie
    if liste_elfes == [] :
           return
    lutin_random = rd.choice(liste_elfes)
    abscisse = can_jeu.coords(lutin_random)[0]
-   ordonee = 70
+   ordonee = can_jeu.coords(lutin_random)[1]
    neige = can_jeu.create_image(abscisse,ordonee,image=flocon)
    deplacement_flocon(neige)
    Application.after(1500,chute_flocon)
@@ -60,13 +59,16 @@ def deplacement_flocon (neige) :
    can_jeu.move(neige, 0 , 10 )
    Application.after(70,lambda : deplacement_flocon(neige))
    coordonnees = can_jeu.coords(papa)
-   if coordonnees[0]-40 < can_jeu.coords(neige)[0] < coordonnees[0]+40 and coordonnees[1]-40 < can_jeu.coords(neige)[1] < coordonnees[1]+40 :
-       can_jeu.delete(neige)
-       print('Vous avez perdu une vie!!!!')
-       vie.append(1)
-       label_vie.config(text = "Vies restantes : " + str(len(vie)))
-   if len(vie) == 3 :
-       print ("Vous avez perdu !!")
+  
+   if can_jeu.coords(neige) :
+        if coordonnees[0]-40 < can_jeu.coords(neige)[0] < coordonnees[0]+40 and coordonnees[1]-40 < can_jeu.coords(neige)[1] < coordonnees[1]+40 :
+            can_jeu.delete(neige)
+            print('Vous avez perdu une vie!!!!')
+            can_jeu.coords(papa, 570,520)
+            vie.append(1)
+            label_vie.config(text = "Vies restantes : " + str(len(vie)))
+        if len(vie) == 3 :
+            print ("Vous avez perdu !!")
 
 liste_elfes = []
 abscisse = 60
@@ -80,15 +82,22 @@ chute_flocon ()
 
 def deplacement_lutin(elfe) :
   global x
+  peut_bouger = False
   if liste_elfes == [] :
       return
-  dx = can_jeu.coords(elfe)[0]
-  if dx < 1050 and dx > 50 :
-      can_jeu.move(elfe, x , 0 )
-  else :
+  for gnome in liste_elfes :
+      dx = can_jeu.coords(gnome)[0]
+      print(dx)
+      if dx<50 or dx>1050:
+          peut_bouger = True
+  print(peut_bouger)
+  if peut_bouger == True :
       x=-1*x
-      can_jeu.move(elfe, x , 0 )
-  Application.after(80,lambda : deplacement_lutin(elfe))
+      for gnome in liste_elfes :
+          can_jeu.move(gnome, 0 , 10 )
+  for gnome in liste_elfes :
+      can_jeu.move(gnome, x , 0 )
+  Application.after(700,lambda : deplacement_lutin(elfe))
 
 for elfe in liste_elfes :
    deplacement_lutin(elfe)
