@@ -5,6 +5,7 @@ import random as rd
 
 Application = tk.Tk()
 
+renne=tk.PhotoImage(file ="renne.png")
 can_jeu=tk.Canvas(bg='brown', width=1100, height=600)
 can_jeu.place(x=200,y=50)
 label_title = tk.Label(text ="Bienvenue sur notre Space Invader !",font=("Helvetica", 30),bg = "green")
@@ -17,8 +18,9 @@ OptionList = ["sucre d'orge", "boule de neige"]
 variable = tk.StringVar(Application)
 variable.set(OptionList[0])
 vie = []
-label_vie = tk.Label(text ="Vies restantes : " + str(len(vie)) ,font=("Helvetica", 30),bg = "green")
-label_vie.place(x=50, y=50)
+label_vie = tk.Label(text ="Nb de fois touché : " + str(len(vie)) ,font=("Helvetica", 20),bg = "green")
+label_vie.place(x=0, y=150)
+fin_du_jeu = 0
 
 opt_menu = tk.OptionMenu(Application, variable, *OptionList)
 opt_menu.config(width = 11, font = ('Helvetica', 20), bg="green")
@@ -56,6 +58,7 @@ def chute_flocon ():
    Application.after(1500,chute_flocon)
 
 def deplacement_flocon (neige) :
+   global fin_du_jeu
    can_jeu.move(neige, 0 , 10 )
    Application.after(70,lambda : deplacement_flocon(neige))
    coordonnees = can_jeu.coords(papa)
@@ -66,10 +69,17 @@ def deplacement_flocon (neige) :
             print('Vous avez perdu une vie!!!!')
             can_jeu.coords(papa, 570,520)
             vie.append(1)
-            label_vie.config(text = "Vies restantes : " + str(len(vie)))
-        if len(vie) == 3 :
-            print ("Vous avez perdu !!")
-
+            label_vie.config(text = "Nb de fois touché : " + str(len(vie)))
+   if len(vie) == 3 :
+       if fin_du_jeu ==0 :
+       #print ("Vous avez perdu !!")
+       #if fin_du_jeu != 10 :
+         #  fin_du_jeu=1
+       #if fin_du_jeu == 1 :
+            echec()
+            fin_du_jeu = 10
+            return
+       #return
 liste_elfes = []
 abscisse = 60
 ordonnee = 100
@@ -87,10 +97,8 @@ def deplacement_lutin(elfe) :
       return
   for gnome in liste_elfes :
       dx = can_jeu.coords(gnome)[0]
-      print(dx)
       if dx<50 or dx>1050:
           peut_bouger = True
-  print(peut_bouger)
   if peut_bouger == True :
       x=-1*x
       for gnome in liste_elfes :
@@ -129,7 +137,44 @@ def deplacement_cadeau (gift) :
 
 can_jeu.bind_all('<space>', tire)
 
+def echec() :
+    print("fonction echec")
+    popup = tk.Toplevel(Application)
+    popup.geometry("420x290")
+    #popup.overrideredirect(1)
+    can_echec = tk.Canvas(popup) 
+    can_echec.create_text(210,160,font=("Helvetica", 15), text= "Vous avez perdu") 
+    can_echec.pack(expand='Yes')
+    bouton_recommencer = tk.Button(popup, text= 'Recommencer',width='7', height='1',font=("Helvetica", 20),) 
+    bouton_recommencer.place(x=150, y=255)
+    bouton_arreter = tk.Button(popup, text= 'Arreter',width='7', height='1',font=("Helvetica", 20),command = Application.destroy) 
+    bouton_arreter.place(x=150, y=255)
+    #popup.transient()  
+    #popup.grab_set() 
+    popup.update()
 
+def placement_rennes (liste_rennes,ordonnee,nbre) :
+    liste=[]
+    liste_coord = []
+    for i in range (nbre) :
+        abscisse = rd.randint(50,1050)
+        while abscisse%50 != 0 :
+            abscisse = rd.randint(50,1050)
+        for animal in liste :
+            liste_coord.append(can_jeu.coords(animal)[0])
+        while abscisse in liste_coord :
+            print('while')
+            abscisse = rd.randint(50,1050)
+            while abscisse%50 != 0 :
+                abscisse = rd.randint(50,1050)
+        cerf = can_jeu.create_image(abscisse,ordonnee,image=renne)
+        liste.append(cerf)
+    liste_rennes.append(liste)
+
+liste_rennes = []
+placement_rennes (liste_rennes,400,10)
+placement_rennes (liste_rennes,350,10)
+placement_rennes (liste_rennes,300,10)
 
 Application.title("Space Invaders")
 Application.geometry("1400x900")
