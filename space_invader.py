@@ -142,6 +142,12 @@ def placement_rennes (liste_rennes,ordonnee,nbre) :
        liste.append(cerf)
    liste_rennes.append(liste)
 
+def placement_lutins (liste_elfes,ordonnee) :
+    abscisse = 60
+    for i in range(8) :
+        elfe = can_jeu.create_image(abscisse,ordonnee,image=lutin)
+        alien.liste_elfes.append(elfe)
+        abscisse += 70
 
 def deplacement_pain (can_jeu,pain):
    abscisse = can_jeu.coords(pain)[0]
@@ -149,15 +155,14 @@ def deplacement_pain (can_jeu,pain):
        can_jeu.delete(pain)
        pain = can_jeu.create_image(20,40,image=pain_epice)
    else :
-       can_jeu.move (pain, 30,0)
-   Application.after(200,lambda : deplacement_pain (can_jeu,pain))
-
+       can_jeu.move (pain, 8,0)
+   Application.after(80,lambda : deplacement_pain (can_jeu,pain))
 
 ###### ----- Relatif à Tkinter ----- #####
 
 can_jeu=tk.Canvas(bg='brown', width=1100, height=600)
 can_jeu.place(x=200,y=50)
-x=6
+x=1
 
 lutin=tk.PhotoImage(file ="lutin.png")
 pere_noel=tk.PhotoImage(file ="pere_noel.png")
@@ -202,7 +207,6 @@ Application.title("Space Invaders")
 Application.geometry("1400x900")
 Application.configure(bg='green')
 
-
 ###### ----- Programme principal ----- #####
 
 liste_rennes = []
@@ -210,12 +214,10 @@ placement_rennes (liste_rennes,460,10)
 placement_rennes (liste_rennes,420,10)
 placement_rennes (liste_rennes,380,10)
 
-abscisse = 60
-ordonnee = 100
-for i in range(9) :
-   elfe = can_jeu.create_image(abscisse,ordonnee,image=lutin)
-   alien.liste_elfes.append(elfe)
-   abscisse += 90
+
+placement_lutins (alien.liste_elfes,100)
+placement_lutins (alien.liste_elfes,160)
+placement_lutins (alien.liste_elfes,220)
 
 alien.chute_flocon ()
 
