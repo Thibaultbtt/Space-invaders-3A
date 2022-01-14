@@ -7,7 +7,7 @@ Application = tk.Tk()
 
 class Santa_claus ():
    def __init__(self,liste_elfes,can_jeu,lutin,papa):
-       self.vie =[]
+       self.vie = 3
        self.cadeau=tk.PhotoImage(file ="cadeau.png")
        self.liste_elfes = liste_elfes
 
@@ -51,6 +51,7 @@ class Alien () :
 
    def chute_flocon (self):
       if self.liste_elfes == [] :
+             echec("Vous avez gagné")
              return
       lutin_random = rd.choice(self.liste_elfes)
       abscisse = can_jeu.coords(lutin_random)[0]
@@ -80,12 +81,12 @@ class Alien () :
                can_jeu.delete(neige)
                print('Vous avez perdu une vie!!!!')
                can_jeu.coords(papa, 570,520)
-               santa.vie.append(1)
-               label_vie.config(text = "Nb de fois touché : " + str(len(santa.vie)))
-      if len(santa.vie) == 3 :
-          if fin_du_jeu ==0 :
+               santa.vie = santa.vie - 1
+               label_vie.config(text = "Vies restantes : " + str(santa.vie) + "/3" )
+      if santa.vie == 0 :
+          if fin_du_jeu == 0 :
                fin_du_jeu = 10
-               echec()
+               echec("Vous avez perdu")
                return
 
    def deplacement_lutin(self,elfe) :
@@ -107,13 +108,12 @@ class Alien () :
 
 ##### ----- Fonctions ----- #####
 
-def echec() :
+def echec(texte) :
    print("fonction echec")
    popup = tk.Toplevel(Application)
    popup.geometry("420x290")
-   #popup.overrideredirect(1)
    can_echec = tk.Canvas(popup)
-   can_echec.create_text(210,160,font=("Helvetica", 15), text= "Vous avez perdu")
+   can_echec.create_text(210,160,font=("Helvetica", 15), text= texte)
    can_echec.pack(expand='Yes')
    bouton_recommencer = tk.Button(popup, text= 'Recommencer',width='7', height='1',font=("Helvetica", 20),)
    bouton_recommencer.place(x=150, y=255)
@@ -159,7 +159,7 @@ santa = Santa_claus(alien.liste_elfes,can_jeu,lutin,papa)
 
 label_title = tk.Label(text ="Bienvenue sur notre Space Invader !",font=("Helvetica", 30),bg = "green")
 label_title.place(x=470,y=3)
-label_vie = tk.Label(text ="Nb de fois touché : " + str(len(santa.vie)) ,font=("Helvetica", 20),bg = "green")
+label_vie = tk.Label(text ="Vies restantes : " + str(santa.vie) + "/ 3" ,font=("Helvetica", 20),bg = "green")
 label_vie.place(x=0, y=150)
 label_menu= tk.Label(text ="Niveau",font=("Helvetica", 20),bg = "green")
 label_menu.place(x=55,y=45)
@@ -206,8 +206,6 @@ alien.chute_flocon ()
 
 for elfe in alien.liste_elfes :
   alien.deplacement_lutin(elfe)
-
-
 
 
 
