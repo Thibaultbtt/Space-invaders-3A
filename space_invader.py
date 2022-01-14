@@ -80,7 +80,7 @@ class Alien () :
            if coordonnees[0]-40 < can_jeu.coords(neige)[0] < coordonnees[0]+40 and coordonnees[1]-40 < can_jeu.coords(neige)[1] < coordonnees[1]+40 :
                can_jeu.delete(neige)
                print('Vous avez perdu une vie!!!!')
-               can_jeu.coords(papa, 570,520)
+               can_jeu.coords(papa, 570,540)
                santa.vie = santa.vie - 1
                label_vie.config(text = "Vies restantes : " + str(santa.vie) + "/3" )
       if santa.vie == 0 :
@@ -96,15 +96,18 @@ class Alien () :
          return
      for gnome in self.liste_elfes :
          dx = can_jeu.coords(gnome)[0]
+         dy = can_jeu.coords(gnome)[1]
          if dx<50 or dx>1050:
              peut_bouger = True
+         elif dy > 330 :
+             return
      if peut_bouger == True :
          x=-1*x
          for gnome in self.liste_elfes :
              can_jeu.move(gnome, 0 , 10 )
      for gnome in self.liste_elfes :
          can_jeu.move(gnome, x , 0 )
-     Application.after(700,lambda : self.deplacement_lutin(elfe))
+     Application.after(1000,lambda : self.deplacement_lutin(elfe))
 
 ##### ----- Fonctions ----- #####
 
@@ -140,7 +143,14 @@ def placement_rennes (liste_rennes,ordonnee,nbre) :
    liste_rennes.append(liste)
 
 
-
+def deplacement_pain (can_jeu,pain):
+   abscisse = can_jeu.coords(pain)[0]
+   if abscisse > 1300 :
+       can_jeu.delete(pain)
+       pain = can_jeu.create_image(20,40,image=pain_epice)
+   else :
+       can_jeu.move (pain, 30,0)
+   Application.after(200,lambda : deplacement_pain (can_jeu,pain))
 
 
 ###### ----- Relatif à Tkinter ----- #####
@@ -152,7 +162,12 @@ x=6
 lutin=tk.PhotoImage(file ="lutin.png")
 pere_noel=tk.PhotoImage(file ="pere_noel.png")
 
-papa = can_jeu.create_image(570,520,image=pere_noel)
+pain_epice = tk.PhotoImage(file ="pain_epice.png")
+pain = can_jeu.create_image(20,40,image=pain_epice)
+
+deplacement_pain (can_jeu,pain)
+
+papa = can_jeu.create_image(570,540,image=pere_noel)
 
 alien = Alien(lutin,papa)
 santa = Santa_claus(alien.liste_elfes,can_jeu,lutin,papa)
@@ -191,16 +206,16 @@ Application.configure(bg='green')
 ###### ----- Programme principal ----- #####
 
 liste_rennes = []
-placement_rennes (liste_rennes,400,10)
-placement_rennes (liste_rennes,350,10)
-placement_rennes (liste_rennes,300,10)
+placement_rennes (liste_rennes,460,10)
+placement_rennes (liste_rennes,420,10)
+placement_rennes (liste_rennes,380,10)
 
 abscisse = 60
 ordonnee = 100
-for i in range(5) :
+for i in range(9) :
    elfe = can_jeu.create_image(abscisse,ordonnee,image=lutin)
    alien.liste_elfes.append(elfe)
-   abscisse += 200
+   abscisse += 90
 
 alien.chute_flocon ()
 
