@@ -5,7 +5,6 @@ import random as rd
 
 Application = tk.Tk()
 
-renne=tk.PhotoImage(file ="renne.png")
 can_jeu=tk.Canvas(bg='brown', width=1100, height=600)
 can_jeu.place(x=200,y=50)
 label_title = tk.Label(text ="Bienvenue sur notre Space Invader !",font=("Helvetica", 30),bg = "green")
@@ -21,6 +20,7 @@ vie = []
 label_vie = tk.Label(text ="Nb de fois touché : " + str(len(vie)) ,font=("Helvetica", 20),bg = "green")
 label_vie.place(x=0, y=150)
 fin_du_jeu = 0
+renne=tk.PhotoImage(file ="renne.png")
 
 opt_menu = tk.OptionMenu(Application, variable, *OptionList)
 opt_menu.config(width = 11, font = ('Helvetica', 20), bg="green")
@@ -57,9 +57,42 @@ def chute_flocon ():
    deplacement_flocon(neige)
    Application.after(1500,chute_flocon)
 
+def placement_rennes (liste_rennes,ordonnee,nbre) :
+    liste=[]
+    liste_coord = []
+    for i in range (nbre) :
+        abscisse = rd.randint(50,1050)
+        while abscisse%50 != 0 :
+            abscisse = rd.randint(50,1050)
+        for animal in liste :
+            liste_coord.append(can_jeu.coords(animal)[0])
+        while abscisse in liste_coord :
+            print('while')
+            abscisse = rd.randint(50,1050)
+            while abscisse%50 != 0 :
+                abscisse = rd.randint(50,1050)
+        cerf = can_jeu.create_image(abscisse,ordonnee,image=renne)
+        liste.append(cerf)
+    liste_rennes.append(liste)
+
+liste_rennes = []
+placement_rennes (liste_rennes,400,10)
+placement_rennes (liste_rennes,350,10)
+placement_rennes (liste_rennes,300,10)
+
 def deplacement_flocon (neige) :
-   global fin_du_jeu
    can_jeu.move(neige, 0 , 10 )
+   if liste_rennes==[] :
+        return
+   for j in range(len(liste_rennes)) :
+        for animal in liste_rennes[j] :
+            coordonnees = can_jeu.coords(animal)
+            if coordonnees[0]-30 < can_jeu.coords(neige)[0] < coordonnees[0]+30 and coordonnees[1]-30 < can_jeu.coords(neige)[1] < coordonnees[1]+30 :
+                liste_rennes[j].remove(animal)
+                can_jeu.delete(animal)
+                can_jeu.delete(neige)
+                return
+   global fin_du_jeu
    Application.after(70,lambda : deplacement_flocon(neige))
    coordonnees = can_jeu.coords(papa)
   
@@ -153,28 +186,7 @@ def echec() :
     #popup.grab_set() 
     popup.update()
 
-def placement_rennes (liste_rennes,ordonnee,nbre) :
-    liste=[]
-    liste_coord = []
-    for i in range (nbre) :
-        abscisse = rd.randint(50,1050)
-        while abscisse%50 != 0 :
-            abscisse = rd.randint(50,1050)
-        for animal in liste :
-            liste_coord.append(can_jeu.coords(animal)[0])
-        while abscisse in liste_coord :
-            print('while')
-            abscisse = rd.randint(50,1050)
-            while abscisse%50 != 0 :
-                abscisse = rd.randint(50,1050)
-        cerf = can_jeu.create_image(abscisse,ordonnee,image=renne)
-        liste.append(cerf)
-    liste_rennes.append(liste)
 
-liste_rennes = []
-placement_rennes (liste_rennes,400,10)
-placement_rennes (liste_rennes,350,10)
-placement_rennes (liste_rennes,300,10)
 
 Application.title("Space Invaders")
 Application.geometry("1400x900")
